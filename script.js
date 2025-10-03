@@ -1,4 +1,4 @@
-// script.js — النسخة النهائية الكاملة
+// script.js — النسخة النهائية المدمجة
 // كلمة مرور لوحة التحكم الافتراضية: asd321321
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const q = sel => document.querySelector(sel);
   const safeAdd = (el, ev, fn) => { if (el) el.addEventListener(ev, fn); };
 
-  // ---- Elements ----
+  // ---- Elements (existing + new) ----
   const splash = $('splash');
   const splashStart = $('splashStart');
   const splashAdmin = $('splashAdmin');
@@ -49,23 +49,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveSettings = $('saveSettings');
   const resetSettings = $('resetSettings');
 
-  const openBgMainPopup = $('openBgMainPopup');
-  const popupBgMain = $('popupBgMain');
-  const popupBgMainInput = $('popupBgMainInput');
-  const popupBgMainApply = $('popupBgMainApply');
-  const popupBgMainClose = $('popupBgMainClose');
-
-  const openBgFontsPopup = $('openBgFontsPopup');
-  const popupBgFonts = $('popupBgFonts');
-  const popupBgFontsInput = $('popupBgFontsInput');
-  const popupBgFontsApply = $('popupBgFontsApply');
-  const popupBgFontsClose = $('popupBgFontsClose');
-
-  const openBgStylesPopup = $('openBgStylesPopup');
-  const popupBgStyles = $('popupBgStyles');
-  const popupBgStylesInput = $('popupBgStylesInput');
-  const popupBgStylesApply = $('popupBgStylesApply');
-  const popupBgStylesClose = $('popupBgStylesClose');
+  // gradient controls (admin)
+  const gradColor1 = $('gradColor1');
+  const gradColor2 = $('gradColor2');
+  const gradColor3 = $('gradColor3');
+  const gradType = $('gradType');
+  const applyGradientBtn = $('applyGradientBtn');
+  const saveGradientBtn = $('saveGradientBtn');
+  const gradPreview = $('gradPreview');
 
   // sections UI
   const inputText = $('inputText');
@@ -81,6 +72,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const stylePreview = $('stylePreview');
   const copyResult = $('copyResult');
 
+  const aslPresetsContainer = $('aslPresets');
+
+  // popup inputs (reuse)
+  const popupBgMain = $('popupBgMain');
+  const popupBgMainInput = $('popupBgMainInput');
+  const popupBgMainApply = $('popupBgMainApply');
+  const popupBgMainClose = $('popupBgMainClose');
+
   // ---- Local storage keys ----
   const LS_FONTS = 'app_fonts_v1';
   const LS_STYLES = 'app_styles_v1';
@@ -88,8 +87,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const LS_BG_MAIN = 'bg_main_v1';
   const LS_BG_FONTS = 'bg_fonts_v1';
   const LS_BG_STYLES = 'bg_styles_v1';
+  const LS_GRAD_TYPE = 'app_grad_type_v1';
+  const LS_GRAD_COLORS = 'app_grad_colors_v1';
+  const LS_GRAD_PRESETS = 'app_grad_presets_v1';
 
-  // ---- Default fonts (20+) ----
+  // ---- Default fonts & styles (keep your original lists) ----
   let defaultFonts = [
     {name:'Amiri', css:'Amiri', url:'https://fonts.googleapis.com/css2?family=Amiri&display=swap'},
     {name:'Cairo', css:'Cairo', url:'https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap'},
@@ -113,7 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
     {name:'Aref Ruqaa', css:'"Aref Ruqaa"', url:'https://fonts.googleapis.com/css2?family=Aref+Ruqaa&display=swap'}
   ];
 
-  // load saved or defaults
   let fonts = JSON.parse(localStorage.getItem(LS_FONTS) || 'null') || defaultFonts.slice();
   let styles = JSON.parse(localStorage.getItem(LS_STYLES) || 'null') || [
     {id:'s1', label:'نجوم ✨', pattern:'✨ {txt} ✨'},
@@ -138,10 +139,9 @@ document.addEventListener('DOMContentLoaded', () => {
     {id:'s20', label:'فنّي ▣', pattern:'▣ {txt} ▣'}
   ];
 
-  // ---- utility: load font links into head ----
+  // ---- ensure fonts loaded ----
   function ensureFontLoaded(f) {
     if (!f || !f.url) return;
-    // avoid duplicates
     const existing = Array.from(document.head.querySelectorAll('link')).some(l => l.href === f.url);
     if (!existing) {
       const l = document.createElement('link'); l.rel='stylesheet'; l.href=f.url; document.head.appendChild(l);
@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   fonts.forEach(ensureFontLoaded);
 
-  // ---- render font selector & appFontSelect ----
+  // ---- render selectors ----
   function renderFontOptions() {
     if (fontSelector) {
       fontSelector.innerHTML = '';
@@ -168,7 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   renderFontOptions();
 
-  // ---- render style selector ----
   function renderStyleOptions() {
     if (!styleSelector) return;
     styleSelector.innerHTML = '';
@@ -178,7 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   renderStyleOptions();
 
-  // ---- render admin lists ----
   function renderAdminLists() {
     if (adminFontsList) {
       adminFontsList.innerHTML = '';
@@ -189,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
         adminFontsList.appendChild(div);
       });
       adminFontsList.querySelectorAll('.remove-font').forEach(btn => {
-        btn.addEventListener('click', e => {
+        btn.addEventListener('click', () => {
           const i = Number(btn.dataset.i);
           if (confirm('حذف الخط نهائياً؟')) {
             fonts.splice(i,1);
@@ -208,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
         adminStylesList.appendChild(div);
       });
       adminStylesList.querySelectorAll('.remove-style').forEach(btn => {
-        btn.addEventListener('click', e => {
+        btn.addEventListener('click', () => {
           const i = Number(btn.dataset.i);
           if (confirm('حذف الستايل نهائياً؟')) {
             styles.splice(i,1);
@@ -232,10 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---- Sidebar open/close ----
   safeAdd(toggleSidebar, 'click', ()=> { if (sidebar) sidebar.classList.add('open'); });
   safeAdd(closeSidebar, 'click', ()=> { if (sidebar) sidebar.classList.remove('open'); });
-  // close on link click
-  document.querySelectorAll('.sidebar-nav a').forEach(a => {
-    a.addEventListener('click', ()=> { if (sidebar) sidebar.classList.remove('open'); });
-  });
+  document.querySelectorAll('.sidebar-nav a').forEach(a => a.addEventListener('click', ()=> { if (sidebar) sidebar.classList.remove('open'); }));
 
   // ---- Admin modal open/close/login ----
   safeAdd(openAdmin, 'click', ()=> { if (adminModal) { adminModal.classList.add('show'); adminModal.setAttribute('aria-hidden','false'); } });
@@ -248,9 +243,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (adminLogin) adminLogin.style.display = 'none';
       if (adminPanel) adminPanel.style.display = 'block';
       renderAdminLists();
-    } else {
-      alert('كلمة المرور غير صحيحة');
-    }
+      loadSavedGradientToUI();
+    } else alert('كلمة المرور غير صحيحة');
   });
 
   // ---- Add font by URL ----
@@ -355,27 +349,139 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ---- change app font ----
   safeAdd(appFontSelect, 'change', (e)=> { document.body.style.fontFamily = e.target.value; localStorage.setItem(LS_APP_FONT, e.target.value); });
-  // set saved
   const savedAppFont = localStorage.getItem(LS_APP_FONT);
   if (savedAppFont) document.body.style.fontFamily = savedAppFont;
 
-  // ---- preview update functions ----
+  // ---- Gradient helpers (compose gradient strings) ----
+  function composeGradient(type, c1, c2, c3) {
+    c1 = c1 || '#5b21b6'; c2 = c2 || '#2563eb'; c3 = c3 || '#10b981';
+    switch(type) {
+      case 'linear-135': return `linear-gradient(135deg, ${c1}, ${c2}, ${c3})`;
+      case 'linear-90': return `linear-gradient(90deg, ${c1}, ${c2}, ${c3})`;
+      case 'linear-45': return `linear-gradient(45deg, ${c1}, ${c2}, ${c3})`;
+      case 'radial': return `radial-gradient(circle, ${c1}, ${c2}, ${c3})`;
+      case 'conic': return `conic-gradient(from 180deg, ${c1}, ${c2}, ${c3})`;
+      default: return `linear-gradient(135deg, ${c1}, ${c2}, ${c3})`;
+    }
+  }
+
+  // load saved gradient from LS to UI
+  function loadSavedGradientToUI(){
+    const savedType = localStorage.getItem(LS_GRAD_TYPE) || 'linear-135';
+    const savedColors = JSON.parse(localStorage.getItem(LS_GRAD_COLORS) || 'null') || ['#5b21b6','#2563eb','#10b981'];
+    if (gradType) gradType.value = savedType;
+    if (gradColor1) gradColor1.value = savedColors[0];
+    if (gradColor2) gradColor2.value = savedColors[1];
+    if (gradColor3) gradColor3.value = savedColors[2];
+    updateGradPreview();
+  }
+
+  function updateGradPreview(){
+    if (!gradPreview) return;
+    const type = gradType ? gradType.value : 'linear-135';
+    const c1 = gradColor1 ? gradColor1.value : '#5b21b6';
+    const c2 = gradColor2 ? gradColor2.value : '#2563eb';
+    const c3 = gradColor3 ? gradColor3.value : '#10b981';
+    const g = composeGradient(type, c1, c2, c3);
+    gradPreview.style.background = g;
+    gradPreview.style.webkitBackgroundClip = 'border-box';
+  }
+
+  // apply gradient to previewFont based on admin or user selection
+  function applyGradientToPreview(type, colors){
+    if (!previewFont) return;
+    const g = composeGradient(type, colors[0], colors[1], colors[2]);
+    previewFont.style.background = g;
+    previewFont.style.webkitBackgroundClip = 'text';
+    previewFont.style.webkitTextFillColor = 'transparent';
+  }
+
+  // ---- ASL-like quick presets (applies gradient quickly) ----
+  const aslPresets = [
+    {id:'p1', label:'أرجواني • أزرق • أخضر', colors:['#5b21b6','#2563eb','#10b981'], type:'linear-135'},
+    {id:'p2', label:'أحمر • برتقالي • أصفر', colors:['#ef4444','#f97316','#facc15'], type:'linear-135'},
+    {id:'p3', label:'سماوي • بنفسجي', colors:['#0ea5e9','#6366f1','#8b5cf6'], type:'linear-90'},
+    {id:'p4', label:'ترخواز • سماوي', colors:['#14b8a6','#22d3ee','#06b6d4'], type:'radial'},
+    {id:'p5', label:'وردي • بنفسجي', colors:['#f43f5e','#ec4899','#8b5cf6'], type:'conic'}
+  ];
+
+  function renderASLPresets(){
+    if (!aslPresetsContainer) return;
+    aslPresetsContainer.innerHTML = '';
+    aslPresets.forEach(p => {
+      const b = document.createElement('button');
+      b.className = 'btn btn-ghost';
+      b.innerText = p.label;
+      b.style.minWidth = 'auto';
+      b.addEventListener('click', ()=> {
+        // set UI to preset and apply
+        if (gradColor1) gradColor1.value = p.colors[0];
+        if (gradColor2) gradColor2.value = p.colors[1];
+        if (gradColor3) gradColor3.value = p.colors[2];
+        if (gradType) gradType.value = p.type;
+        localStorage.setItem(LS_GRAD_TYPE, p.type);
+        localStorage.setItem(LS_GRAD_COLORS, JSON.stringify(p.colors));
+        if (useGradient) { if (!useGradient.checked) useGradient.checked = true; }
+        applyGradientToPreview(p.type, p.colors);
+      });
+      // small color strip
+      const span = document.createElement('span');
+      span.style.display = 'inline-block';
+      span.style.width='60px';
+      span.style.height='22px';
+      span.style.marginLeft='8px';
+      span.style.borderRadius='6px';
+      span.style.background = composeGradient(p.type, p.colors[0], p.colors[1], p.colors[2]);
+      b.appendChild(span);
+      aslPresetsContainer.appendChild(b);
+    });
+  }
+  renderASLPresets();
+
+  // ---- apply gradient buttons handlers ----
+  safeAdd(applyGradientBtn, 'click', ()=> {
+    const type = gradType ? gradType.value : 'linear-135';
+    const colors = [gradColor1 ? gradColor1.value : '#5b21b6', gradColor2 ? gradColor2.value : '#2563eb', gradColor3 ? gradColor3.value : '#10b981'];
+    localStorage.setItem(LS_GRAD_TYPE, type);
+    localStorage.setItem(LS_GRAD_COLORS, JSON.stringify(colors));
+    updateGradPreview();
+    if (useGradient && useGradient.checked) applyGradientToPreview(type, colors);
+    alert('تم تطبيق التدرج مؤقتاً');
+  });
+
+  safeAdd(saveGradientBtn, 'click', ()=> {
+    const type = gradType ? gradType.value : 'linear-135';
+    const colors = [gradColor1 ? gradColor1.value : '#5b21b6', gradColor2 ? gradColor2.value : '#2563eb', gradColor3 ? gradColor3.value : '#10b981'];
+    // Save presets list (append)
+    let presets = JSON.parse(localStorage.getItem(LS_GRAD_PRESETS) || 'null') || [];
+    presets.push({id:'p'+Date.now(), type, colors, label: `${colors[0]} ${colors[1]} ${colors[2]}`});
+    localStorage.setItem(LS_GRAD_PRESETS, JSON.stringify(presets));
+    alert('تمت إضافة التدرج لقائمة الحفظ (محلياً)');
+  });
+
+  // ---- preview update functions (integrate gradient support) ----
   function updateArabicPreview() {
     if (!previewFont) return;
     const txt = (inputText && inputText.value) ? inputText.value : 'المعاينة هنا';
     previewFont.textContent = txt;
     const ff = (fontSelector && fontSelector.value) ? fontSelector.value : '';
     previewFont.style.fontFamily = ff || '';
-    if (useGradient && useGradient.checked && fontColor) {
-      // simple gradient effect using background-clip
-      previewFont.style.background = `linear-gradient(90deg, ${fontColor.value}, #000)`;
-      previewFont.style.webkitBackgroundClip = 'text';
-      previewFont.style.webkitTextFillColor = 'transparent';
+    // priority: if useGradient checked -> use saved gradient; else use color
+    const savedType = localStorage.getItem(LS_GRAD_TYPE);
+    const savedColors = JSON.parse(localStorage.getItem(LS_GRAD_COLORS) || 'null');
+    if (useGradient && useGradient.checked) {
+      // if admin set gradient in UI apply that, else saved
+      const type = (gradType && gradType.value) || savedType || 'linear-135';
+      const colors = (gradColor1 && gradColor2 && gradColor3 && gradColor1.value && gradColor2.value && gradColor3.value) ? [gradColor1.value, gradColor2.value, gradColor3.value] : (savedColors || ['#5b21b6','#2563eb','#10b981']);
+      applyGradientToPreview(type, colors);
     } else {
       previewFont.style.background = 'none';
+      previewFont.style.webkitBackgroundClip = 'unset';
+      previewFont.style.webkitTextFillColor = 'unset';
       previewFont.style.color = (fontColor && fontColor.value) ? fontColor.value : '#111';
     }
   }
+
   safeAdd(inputText, 'input', updateArabicPreview);
   safeAdd(fontSelector, 'change', updateArabicPreview);
   safeAdd(fontColor, 'input', updateArabicPreview);
@@ -385,20 +491,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---- save preview as image ----
   safeAdd(saveImage, 'click', ()=> {
     if (!previewFont) return alert('لا توجد معاينة للحفظ');
-    html2canvas(previewFont, {backgroundColor:null, scale:2}).then(canvas => {
+    html2canvas(previewFont, {backgroundColor:null, scale:3}).then(canvas => {
       const a = document.createElement('a'); a.href = canvas.toDataURL('image/png'); a.download = 'preview.png'; a.click();
     }).catch(()=> alert('فشل إنشاء الصورة'));
   });
 
-  // ---- render initial font/style selectors and fill admin select ----
-  function populateInitial() {
-    renderFontOptions();
-    renderStyleOptions();
-    renderAdminLists();
-  }
-  populateInitial();
-
-  // ---- styles behavior ----
+  // ---- styles behavior (name styles) ----
   function updateStylePreview() {
     if (!stylePreview) return;
     const txt = (nameInput && nameInput.value) ? nameInput.value : 'الاسم';
@@ -428,63 +526,60 @@ document.addEventListener('DOMContentLoaded', () => {
   safeAdd(saveSettings, 'click', ()=> {
     localStorage.setItem(LS_FONTS, JSON.stringify(fonts));
     localStorage.setItem(LS_STYLES, JSON.stringify(styles));
+    localStorage.setItem(LS_GRAD_TYPE, gradType ? gradType.value : 'linear-135');
+    const colors = [gradColor1 ? gradColor1.value : '#5b21b6', gradColor2 ? gradColor2.value : '#2563eb', gradColor3 ? gradColor3.value : '#10b981'];
+    localStorage.setItem(LS_GRAD_COLORS, JSON.stringify(colors));
     alert('تم حفظ الإعدادات محلياً');
     renderAdminLists();
   });
   safeAdd(resetSettings, 'click', ()=> {
     if (!confirm('استعادة القيم الافتراضية؟')) return;
     localStorage.removeItem(LS_FONTS); localStorage.removeItem(LS_STYLES); localStorage.removeItem(LS_APP_FONT);
-    fonts = defaultFonts.slice(); styles = JSON.parse(JSON.stringify(styles)).slice(0,20); // keep default-ish
+    localStorage.removeItem(LS_GRAD_TYPE); localStorage.removeItem(LS_GRAD_COLORS);
+    fonts = defaultFonts.slice(); styles = JSON.parse(JSON.stringify(styles)).slice(0,20);
     renderFontOptions(); renderStyleOptions(); renderAdminLists();
     alert('تمت الاستعادة');
     location.reload();
   });
 
-  // ---- Popup open/close handlers ----
-  safeAdd(openBgMainPopup, 'click', ()=> { if (popupBgMain) { popupBgMain.classList.add('show'); popupBgMain.setAttribute('aria-hidden','false'); } });
-  safeAdd(popupBgMainClose, 'click', ()=> { if (popupBgMain) { popupBgMain.classList.remove('show'); popupBgMain.setAttribute('aria-hidden','true'); }});
-  safeAdd(popupBgMainApply, 'click', ()=> {
-    const v = popupBgMainInput ? popupBgMainInput.value.trim() : '';
-    if (!v) return alert('ادخل لون HEX او رابط');
-    if (v.startsWith('#')) document.body.style.background = v; else document.body.style.backgroundImage = `url(${v})`;
-    localStorage.setItem(LS_BG_MAIN, v);
-    if (popupBgMain) { popupBgMain.classList.remove('show'); popupBgMain.setAttribute('aria-hidden','true'); }
-  });
+  // ---- popup handlers (small) ----
+  if (popupBgMain) {
+    safeAdd(popupBgMainApply, 'click', ()=> {
+      const v = popupBgMainInput ? popupBgMainInput.value.trim() : '';
+      if (!v) return alert('ادخل لون HEX او رابط');
+      if (v.startsWith('#')) document.body.style.background = v; else document.body.style.backgroundImage = `url(${v})`;
+      localStorage.setItem(LS_BG_MAIN, v);
+      if (popupBgMain) { popupBgMain.classList.remove('show'); popupBgMain.setAttribute('aria-hidden','true'); }
+    });
+    safeAdd(popupBgMainClose, 'click', ()=> { if (popupBgMain) { popupBgMain.classList.remove('show'); popupBgMain.setAttribute('aria-hidden','true'); }});
+  }
 
-  safeAdd(openBgFontsPopup, 'click', ()=> { if (popupBgFonts) { popupBgFonts.classList.add('show'); popupBgFonts.setAttribute('aria-hidden','false'); } });
-  safeAdd(popupBgFontsClose, 'click', ()=> { if (popupBgFonts) { popupBgFonts.classList.remove('show'); popupBgFonts.setAttribute('aria-hidden','true'); }});
-  safeAdd(popupBgFontsApply, 'click', ()=> {
-    const v = popupBgFontsInput ? popupBgFontsInput.value.trim() : '';
-    if (!v) return alert('ادخل قيمة');
-    const s = $('arabicFontsSection'); if (!s) return;
-    if (v.startsWith('#')) s.style.background = v; else s.style.backgroundImage = `url(${v})`;
-    localStorage.setItem(LS_BG_FONTS, v);
-    if (popupBgFonts) { popupBgFonts.classList.remove('show'); popupBgFonts.setAttribute('aria-hidden','true'); }
-  });
+  // ---- initialize previews & gradient UI ----
+  function initAll(){
+    renderFontOptions();
+    renderStyleOptions();
+    renderAdminLists();
+    loadSavedGradientToUI();
+    updateArabicPreview();
+    updateStylePreview();
+  }
+  initAll();
 
-  safeAdd(openBgStylesPopup, 'click', ()=> { if (popupBgStyles) { popupBgStyles.classList.add('show'); popupBgStyles.setAttribute('aria-hidden','false'); } });
-  safeAdd(popupBgStylesClose, 'click', ()=> { if (popupBgStyles) { popupBgStyles.classList.remove('show'); popupBgStyles.setAttribute('aria-hidden','true'); }});
-  safeAdd(popupBgStylesApply, 'click', ()=> {
-    const v = popupBgStylesInput ? popupBgStylesInput.value.trim() : '';
-    if (!v) return alert('ادخل قيمة');
-    const s = $('nameStylesSection'); if (!s) return;
-    if (v.startsWith('#')) s.style.background = v; else s.style.backgroundImage = `url(${v})`;
-    localStorage.setItem(LS_BG_STYLES, v);
-    if (popupBgStyles) { popupBgStyles.classList.remove('show'); popupBgStyles.setAttribute('aria-hidden','true'); }
-  });
+  // update gradient preview whenever colors/type change
+  if (gradColor1) safeAdd(gradColor1, 'input', updateGradPreview);
+  if (gradColor2) safeAdd(gradColor2, 'input', updateGradPreview);
+  if (gradColor3) safeAdd(gradColor3, 'input', updateGradPreview);
+  if (gradType) safeAdd(gradType, 'change', updateGradPreview);
 
   // ---- helper to check existence ----
   function exists(el) { return el !== null && typeof el !== 'undefined'; }
 
-  // ---- initialize previews ----
-  updateArabicPreview();
-  updateStylePreview();
-
-  // ---- ensure no uncaught errors: debug catch ----
+  // ---- debug safety ----
   window.addEventListener('error', (e) => {
     console.error('JS Error captured:', e.message, e.filename, e.lineno);
   });
 
-  // ---- export small utilities to console for debugging if needed ----
-  window._app = { fonts, styles, renderFontOptions, renderStyleOptions, renderAdminLists };
+  // ---- export small utilities to console for debugging ----
+  window._app = { fonts, styles, renderFontOptions, renderStyleOptions, renderAdminLists, composeGradient, applyGradientToPreview, renderASLPresets };
+
 });
