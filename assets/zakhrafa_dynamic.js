@@ -1,3 +1,12 @@
+// 🧹 تنظيف بيانات التخزين القديمة لمرة واحدة فقط
+(function() {
+  const resetKey = "cleanup_v2"; // غير الاسم لو بدك تجبر تنظيف جديد لاحقًا
+  if (!localStorage.getItem(resetKey)) {
+    localStorage.clear();
+    localStorage.setItem(resetKey, "done");
+    console.log("تم مسح بيانات التخزين القديمة لمرة واحدة ✅");
+  }
+})();
 const dynamicStyles = [
   "• طۨہٰٰظۗـہٰٰجْۧ  ، ¦ 🌥❄️)،'",
   "⊰ طٰہٰٖظٰہٰٖجٰہٰٖ ،⁞ ²⁰⁰² 😻❤️⇣˓",
@@ -38,4 +47,5 @@ function applyNameToDynamicStyles(name) {
 
 if (typeof window !== "undefined") {
   window.applyNameToDynamicStyles = applyNameToDynamicStyles;
+
 }
