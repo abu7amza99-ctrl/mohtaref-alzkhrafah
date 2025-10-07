@@ -688,7 +688,7 @@ if (window.abuHamzaStylesList && Array.isArray(window.abuHamzaStylesList)) {
   });
 
   // ---- Decoration generation & rendering (زخارف الأسماء) ----
-  function specialAbuHamzaVariants(name) {
+  function specialDynamicVariants(name) {
     // if exact match (user asked examples for "طظج"), include exact strings
     const nm = (name || '').trim();
     const arr = [];
@@ -709,7 +709,7 @@ if (window.abuHamzaStylesList && Array.isArray(window.abuHamzaStylesList)) {
     if (!name) return out;
 
     // 1) special exact variants (user examples)
-    out.push(...specialAbuHamzaVariants(name));
+    out.push(...specialDynamicVariants(name));
 
     // 2) from styles list (pattern replacement)
     styles.forEach(s => {
@@ -989,6 +989,7 @@ window.addEventListener("load", () => {
   }catch(e){console && console.warn && console.warn('inject adminpass',e);}
 })(); 
 /* ----- end injected ----- */
+
 
 
 
