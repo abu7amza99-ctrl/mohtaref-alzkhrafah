@@ -141,8 +141,8 @@ document.addEventListener('DOMContentLoaded', () => {
     {id:'u_top_1', label:'✭ ⋆⃝ Fancy', pattern:'✭ ⋆⃝ {txt} ☄'},
     {id:'u_top_2', label:'°•⋆ زخرفة', pattern:'°•⋆{txt}⋆•°'},
     {id:'u_top_3', label:'رموز وقلوب', pattern:'ہٰٖہٰٖہٰٖہٰٖ}txt}🜫'},
-    {id:'u_top_4', label:'تلبيس غامق', pattern:'ہٰٖہٰٖہٰٖہٰٖہٰٖ{txt}ہٰٖہٰٖہٰٖہٰٖہٰٖ'}
-    {id:'u_top_5', label:'تلبيس برمز 1', pattern:'ہٰٖہٰٖہٰٖہٰٖہٰٖ}txt{ہٰٖ🝁'},
+    {id:'u_top_4', label:'تلبيس غامق', pattern:'ہٰٖہٰٖہٰٖہٰٖہٰٖ{txt}ہٰٖہٰٖہٰٖہٰٖہٰٖ'},
+{id:'u_top_5', label:'تلبيس برمز 1', pattern:'ہٰٖہٰٖہٰٖہٰٖہٰٖ{txt}ہٰٖ🝁'},
     {id:'u_top_6', label:'زخرفة مع رموز', pattern:'ـِْ✮ِـٰٚـِْ✮ِـٰٚـِْ✮ِـٰٚـِْ✮ِـٰٚـِْ🎞💛'}
   ];
   
@@ -972,3 +972,4 @@ if (window.applyNameToDynamicStyles) {
   }catch(e){console && console.warn && console.warn('inject adminpass',e);}
 })(); 
 /* ----- end injected ----- */
+
