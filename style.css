@@ -138,3 +138,10 @@ body{
 /* utilities */
 .hidden{display:none}
 .small{font-size:.85rem}
+
+
+/* ----- injected: admin-panel background fix (do not remove) ----- */
+.admin-panel, .admin-content, .modal-card { background: rgba(255,255,255,0.98) !important; backdrop-filter: blur(6px) !important; box-shadow: 0 12px 30px rgba(0,0,0,0.12) !important; }
+body.sidebar-open { overflow: hidden !important; }
+.sidebar.open, .side-menu.open { right: 0 !important; left: auto !important; transform: none !important; }
+/* ----- end injected ----- */
