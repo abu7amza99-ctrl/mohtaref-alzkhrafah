@@ -917,6 +917,23 @@ if (window.applyNameToDynamicStyles) {
 
   // ---- export small utilities to console for debugging if needed ----
   window._app = { fonts, styles, tilbis, renderFontOptions, renderStyleOptions, renderAdminLists, generateDecorations };
+  // === إصلاح شاشة الترحيب ===
+window.addEventListener("load", () => {
+  const splash = document.getElementById("splash");
+  const startBtn = document.getElementById("splashStart");
+  const adminBtn = document.getElementById("splashAdmin");
+
+  if (startBtn && splash) {
+    startBtn.addEventListener("click", () => splash.remove());
+  }
+  if (adminBtn && splash) {
+    adminBtn.addEventListener("click", () => {
+      splash.remove();
+      const openAdmin = document.getElementById("openAdmin");
+      if (openAdmin) openAdmin.click();
+    });
+  }
+});
 });
 
 
@@ -972,4 +989,5 @@ if (window.applyNameToDynamicStyles) {
   }catch(e){console && console.warn && console.warn('inject adminpass',e);}
 })(); 
 /* ----- end injected ----- */
+
 
