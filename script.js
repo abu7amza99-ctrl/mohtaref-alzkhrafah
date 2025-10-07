@@ -689,10 +689,10 @@ if (window.abuHamzaStylesList && Array.isArray(window.abuHamzaStylesList)) {
 
   // ---- Decoration generation & rendering (زخارف الأسماء) ----
   function specialAbuHamzaVariants(name) {
-    // if exact match (user asked examples for "ابو حمزة"), include exact strings
+    // if exact match (user asked examples for "طظج"), include exact strings
     const nm = (name || '').trim();
     const arr = [];
-    if (nm === 'ابو حمزة' || nm === 'أبو حمزة') {
+    if (nm === 'طظج' || nm === 'طظج') {
       arr.push('✭ ⋆⃝☄');
       arr.push('°•⋆txt⋆•°');
       arr.push('ہٰٖہٰٖہٰٖہٰٖہٰٖ');
@@ -989,5 +989,6 @@ window.addEventListener("load", () => {
   }catch(e){console && console.warn && console.warn('inject adminpass',e);}
 })(); 
 /* ----- end injected ----- */
+
 
 
