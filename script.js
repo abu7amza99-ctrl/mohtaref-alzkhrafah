@@ -140,11 +140,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const extraTopStyles = [
     {id:'u_top_1', label:'✭ ⋆⃝ Fancy', pattern:'✭ ⋆⃝ {txt} ☄'},
     {id:'u_top_2', label:'°•⋆ زخرفة', pattern:'°•⋆{txt}⋆•°'},
-    {id:'u_top_3', label:'رموز وقلوب', pattern:'ٳ {txt} 🌥💛 ؛'},
-    {id:'u_top_4', label:'تلبيس غامق', pattern:'اٰبٰہٰٖوٰ {txt} حٰہٰٖمٰہٰٖزٖةً🜫'},
-    {id:'u_top_5', label:'تلبيس برمز 1', pattern:'اٰبٰہٰٖوَٰ {txt} حٰہٰٖمٰہٰٖزٰةً🝁'},
-    {id:'u_top_6', label:'زخرفة مع رموز', pattern:'آبِـٰٚـِْ✮ِـٰٚـِْﯛ̲୭ {txt}ِـٰٚـِْ✮ِـٰٚـِْمِـٰٚـِْ✮ِـٰٚـِْزة💛🎞 ؛'}
+    {id:'u_top_3', label:'رموز وقلوب', pattern:'ہٰٖہٰٖہٰٖہٰٖ}txt}🜫'},
+    {id:'u_top_4', label:'تلبيس غامق', pattern:'ہٰٖہٰٖہٰٖہٰٖہٰٖ{txt}ہٰٖہٰٖہٰٖہٰٖہٰٖ'}
+    {id:'u_top_5', label:'تلبيس برمز 1', pattern:'ہٰٖہٰٖہٰٖہٰٖہٰٖ}txt{ہٰٖ🝁'},
+    {id:'u_top_6', label:'زخرفة مع رموز', pattern:'ـِْ✮ِـٰٚـِْ✮ِـٰٚـِْ✮ِـٰٚـِْ✮ِـٰٚـِْ🎞💛'}
   ];
+  
+  
+  // دمج ستايلات أبو حمزة مع الستات الأصلية
+if (window.abuHamzaStylesList && Array.isArray(window.abuHamzaStylesList)) {
+  window.abuHamzaStylesList.forEach(style => {
+    decorations.push(style);
+  });
+}
 
   // load saved or defaults
   let fonts = JSON.parse(localStorage.getItem(LS_FONTS) || 'null') || (defaultFonts.slice());
@@ -426,7 +434,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     reader.readAsText(f);
   });
-
   // ---- apply/clear backgrounds ----
   safeAdd(applyBgMain, 'click', ()=> {
     const v = bgMainInput ? bgMainInput.value.trim() : '';
@@ -686,12 +693,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const nm = (name || '').trim();
     const arr = [];
     if (nm === 'ابو حمزة' || nm === 'أبو حمزة') {
-      arr.push('✭ ⋆⃝𝑨𝑩𝑼☄𝟕𝑨𝑴𝒁𝑨');
-      arr.push('°•⋆شِٰـِۢۿۿہد⋆•°');
-      arr.push('ٳ ٻًوٌ حہمْزًةً🌥💛 ؛');
-      arr.push('اٰبٰہٰٖوٰ حٰہٰٖمٰہٰٖزٖةً🜫');
-      arr.push('اٰبٰہٰٖوَٰ حٰہٰٖمٰہٰٖزٰةً🝁');
-      arr.push('آبِـٰٚـِْ✮ِـٰٚـِْﯛ̲୭ حِـٰٚـِْ✮ِـٰٚـِْمِـٰٚـِْ✮ِـٰٚـِْزة💛🎞 ؛');
+      arr.push('✭ ⋆⃝☄');
+      arr.push('°•⋆txt⋆•°');
+      arr.push('ہٰٖہٰٖہٰٖہٰٖہٰٖ');
+      arr.push('ہٰٖہٰٖہٰٖہٰٖ🜫');
+      arr.push('ہٰٖہٰٖہٰٖہٰٖہٰٖہٰٖ🝁');
+      arr.push('ـٰٚـِْ✮ِـٰٚـِْ✮ِـٰٚـِْ✮ِـٰٚـِْ✮ِـٰٚـِْ🎞💛');
     }
     return arr;
   }
@@ -732,6 +739,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const clean = t.trim();
       if (!seen.has(clean) && final.length < 60) { seen.add(clean); final.push(clean); }
     });
+    
+    // 5) زخارف خاصة تستبدل ط ظ ج بحروف الاسم
+if (window.applyNameToDynamicStyles) {
+  try {
+    const fancySet = window.applyNameToDynamicStyles(name);
+    out.push(...fancySet);
+  } catch(e) {
+    console.warn('applyNameToDynamicStyles error', e);
+  }
+}
+
     return final;
   }
 
@@ -900,3 +918,57 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---- export small utilities to console for debugging if needed ----
   window._app = { fonts, styles, tilbis, renderFontOptions, renderStyleOptions, renderAdminLists, generateDecorations };
 });
+
+
+/* ----- injected: sidebar & admin password (do not remove) ----- */
+(function(){
+  try{
+    function qs(id){return document.getElementById(id);}
+    var side = qs('sidebar') || qs('sideMenu') || document.querySelector('.sidebar') || null;
+    var toggle = qs('toggleSidebar') || qs('menuToggle') || qs('menu-toggle');
+    var closeBtn = qs('closeSidebar') || qs('closeMenu') || document.querySelector('.close-x');
+    if(toggle && side){
+      toggle.addEventListener('click', function(){ side.classList.add('open'); document.body.classList.add('sidebar-open'); });
+    }
+    if(closeBtn && side){
+      closeBtn.addEventListener('click', function(){ side.classList.remove('open'); document.body.classList.remove('sidebar-open'); });
+    }
+    document.querySelectorAll && document.querySelectorAll('#sidebar a, .sidebar-nav a, .side-menu a').forEach(function(a){
+      a.addEventListener('click', function(){ if(side){ side.classList.remove('open'); document.body.classList.remove('sidebar-open'); } });
+    });
+  }catch(e){console && console.warn && console.warn('inject sidebar',e);}
+
+  try{
+    if(!window._injected_admin_pass){
+      window._injected_admin_pass = true;
+      var LS_ADMIN = 'app_admin_pass_v_final';
+      var LS_LOGGED = 'app_admin_logged_v_final';
+      var DEFAULT_ADMIN = 'asd321321';
+      function getPass(){ try{ return localStorage.getItem(LS_ADMIN) || DEFAULT_ADMIN;}catch(e){return DEFAULT_ADMIN;} }
+      function setPass(p){ try{ localStorage.setItem(LS_ADMIN,p); return true;}catch(e){return false;} }
+      document.addEventListener('click', function(e){
+        var t = e.target;
+        if(t && t.id === 'adminLoginBtn'){
+          var input = document.getElementById('adminPass') || document.querySelector('#adminModal input[type=password]');
+          if(input){
+            if(input.value === getPass()){
+              try{ localStorage.setItem(LS_LOGGED,'1'); }catch(e){}
+              var loginEl = document.getElementById('adminLogin'); if(loginEl) loginEl.style.display='none';
+              var panelEl = document.getElementById('adminPanel'); if(panelEl) panelEl.style.display='block';
+            } else { alert('كلمة المرور غير صحيحة'); }
+          }
+          e.preventDefault();
+        }
+        if(t && t.id === 'applyChangePass'){
+          var oldP = document.getElementById('oldPass') ? document.getElementById('oldPass').value : '';
+          var newP = document.getElementById('newPass') ? document.getElementById('newPass').value : '';
+          var conf = document.getElementById('confirmPass') ? document.getElementById('confirmPass').value : '';
+          if(!oldP || !newP || newP !== conf){ alert('تأكد من الحقول'); return; }
+          if(oldP !== getPass()){ alert('كلمة المرور الحالية خاطئة'); return; }
+          if(setPass(newP)){ alert('تم تغيير كلمة المرور'); try{ localStorage.setItem(LS_LOGGED,'1'); }catch(e){} }
+        }
+      }, true);
+    }
+  }catch(e){console && console.warn && console.warn('inject adminpass',e);}
+})(); 
+/* ----- end injected ----- */
