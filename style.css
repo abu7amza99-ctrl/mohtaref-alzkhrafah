@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@600&family=Cairo:wght@500&display=swap');
+٧@import url('https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@600&family=Cairo:wght@500&display=swap');
 
 * {
   margin: 0;
@@ -100,8 +100,8 @@ body {
 
 /* الأزرار */
 .icon-btn {
-  width: 45px;
-  height: 45px;
+  width: 69px;
+  height: 69px;
   border: 2px solid #d4af37;
   border-radius: 50%;
   background-color: rgba(255,255,255,0.3);
@@ -308,3 +308,4 @@ body {
   from {opacity: 0;}
   to {opacity: 1;}
 }
+
