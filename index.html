@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="assets/abu7amza.png">
 </head>
+
 <body style="background-image:url('assets/bg.png');background-size:cover;background-attachment:fixed;background-position:center;">
 
   <!-- شاشة الترحيب -->
@@ -18,14 +19,10 @@
   </div>
 
   <!-- الشريط العلوي -->
-<header class="header" style="background-image:url('assets/shbg.png');background-size:cover;background-position:center;">
-    <button id="menu-btn" class="icon-btn">
-  <img src="assets/yhbg.png" alt="Menu" style="width:28px;height:28px;">
-</button>
+  <header class="header" style="background-image:url('assets/shbg.png');background-size:cover;background-position:center;">
+    <button id="menu-btn" class="icon-btn"></button>
     <h1 class="app-title">عالم التصاميم والزخرفة</h1>
-    <button id="control-btn" class="icon-btn">
-  <img src="assets/siting.png" alt="Settings" style="width:28px;height:28px;">
-</button>
+    <button id="control-btn" class="icon-btn"></button>
   </header>
 
   <!-- القائمة الجانبية -->
@@ -107,7 +104,9 @@
     <!-- قسم حول التطبيق -->
     <section id="about" class="section">
       <h2>حول التطبيق</h2>
-      <textarea id="about-text" readonly>تطبيق عالم التصاميم والزخرفة يقدم لك أدوات احترافية لتزيين النصوص والخطوط والأسماء بأناقة وفخامة.</textarea>
+      <textarea id="about-text" readonly>
+تطبيق عالم التصاميم والزخرفة يقدم لك أدوات احترافية لتزيين النصوص والخطوط والأسماء بأناقة وفخامة.
+      </textarea>
     </section>
 
     <!-- قسم اتصل بنا -->
@@ -124,6 +123,7 @@
   <!-- لوحة التحكم -->
   <div id="control-panel" class="control-panel hidden">
     <h2>لوحة التحكم</h2>
+
     <div class="control-section">
       <h3>تغيير ستايل البرنامج</h3>
       <select id="style-selector">
@@ -182,4 +182,4 @@
 
   <script src="script.js"></script>
 </body>
-</html>
+        </html>
