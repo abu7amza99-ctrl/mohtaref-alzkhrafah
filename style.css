@@ -9,10 +9,13 @@
 
 /* خلفية الموقع */
 body {
-  background: url('assets/bg.png') repeat center center fixed;
+  background: url('assets/bg.png') no-repeat center center;
   background-size: cover;
-  background-color: #fdfdfd;
-  color: #000;
+  background-color: #1a120c;
+  background-attachment: scroll;
+  margin: 0;
+  padding: 0;
+  color: #fff;
   overflow-x: hidden;
   min-height: 100vh;
 }
@@ -24,12 +27,11 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.6);
+  background: linear-gradient(135deg, #1c140d 0%, #000 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  backdrop-filter: blur(5px);
 }
 
 .welcome-box {
@@ -68,9 +70,13 @@ body {
 
 /* الشريط العلوي */
 .header {
-  background: url('assets/shbg.png') no-repeat center center;
+  background: linear-gradient(135deg, #d4af37 0%, #f8e287 100%);
+  background-image: url('assets/shbg.png');
+  background-repeat: no-repeat;
+  background-position: center;
   background-size: cover;
-  height: 70px;
+  min-height: 70px;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -102,17 +108,15 @@ body {
   height: 45px;
   border: 2px solid #d4af37;
   border-radius: 50%;
-  background-color: rgba(27, 20, 13, 0.85);
+  background-color: rgba(27, 20, 13, 0.8);
+  color: #f5d77a;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 22px;
   cursor: pointer;
   transition: all 0.3s ease;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 60%;
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
 }
 
 .icon-btn:hover {
@@ -120,14 +124,16 @@ body {
   background-color: rgba(212,175,55,0.3);
 }
 
-/* زر القائمة */
+/* تخصيص زر القائمة */
 #menu-btn {
-  background-image: url('assets/yhbg.png');
+  background: url('assets/yhbg.png') no-repeat center center;
+  background-size: contain;
 }
 
-/* زر لوحة التحكم */
+/* تخصيص زر لوحة التحكم */
 #control-btn {
-  background-image: url('assets/siting.png');
+  background: url('assets/siting.png') no-repeat center center;
+  background-size: contain;
 }
 
 /* القائمة الجانبية */
@@ -171,7 +177,6 @@ body {
   display: none;
   padding: 20px;
   animation: fadeIn 0.6s ease;
-  color: #000;
 }
 
 .section.active {
@@ -192,8 +197,8 @@ body {
   padding: 10px;
   border-radius: 20px;
   border: 1px solid #d4af37;
-  background: rgba(255,255,255,0.7);
-  color: #000;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
 }
 
 .search-box button {
@@ -222,8 +227,165 @@ body {
   transform: scale(1.05);
 }
 
+.add-image {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.add-image button {
+  background: linear-gradient(135deg, #d4af37, #f8e287);
+  color: #000;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.add-image button:hover {
+  transform: scale(1.05);
+}
+
+/* قسم زخرفة الخطوط */
+#fonts textarea {
+  width: 100%;
+  height: 100px;
+  border-radius: 15px;
+  border: 1px solid #d4af37;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
+.font-options, .color-options, .download-options {
+  margin-bottom: 15px;
+}
+
+select, input[type="file"] {
+  background: rgba(27, 20, 13, 0.8);
+  border: 1px solid #d4af37;
+  border-radius: 10px;
+  color: #f5d77a;
+  padding: 8px;
+  width: 100%;
+}
+
+.preview {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.preview-box {
+  min-height: 100px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 15px;
+  border: 1px solid rgba(212,175,55,0.3);
+  padding: 15px;
+  font-size: 20px;
+}
+
+/* زخرفة الأسماء */
+#names input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 15px;
+  border: 1px solid #d4af37;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  margin-bottom: 15px;
+}
+
+.styled-names {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.styled-names div {
+  background: rgba(212,175,55,0.1);
+  border: 1px solid rgba(212,175,55,0.3);
+  border-radius: 15px;
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.styled-names div:hover {
+  background: rgba(212,175,55,0.3);
+}
+
+/* لوحة التحكم */
+.control-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(27, 20, 13, 0.98);
+  padding: 20px;
+  overflow-y: auto;
+  z-index: 9999;
+  color: #fff;
+}
+
+.control-panel.hidden {
+  display: none;
+}
+
+.control-section {
+  margin-bottom: 25px;
+  border-bottom: 1px solid rgba(212,175,55,0.2);
+  padding-bottom: 15px;
+}
+
+.control-section h3 {
+  color: #f5d77a;
+  margin-bottom: 10px;
+}
+
+.close-btn {
+  background: linear-gradient(135deg, #d4af37, #f8e287);
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto;
+}
+
+/* حول واتصل بنا */
+#about textarea {
+  width: 100%;
+  height: 150px;
+  border-radius: 10px;
+  border: 1px solid #d4af37;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  padding: 10px;
+}
+
+.contact-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.contact-links img {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.contact-links img:hover {
+  transform: scale(1.1);
+}
+
 /* الحركات */
 @keyframes fadeIn {
   from {opacity: 0;}
   to {opacity: 1;}
-  }
+}
