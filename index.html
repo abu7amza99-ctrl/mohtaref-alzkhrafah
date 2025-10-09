@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>زخرفة الخطوط العربية</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Cairo:wght@300;400;700&family=Reem+Kufi&family=Lateef&family=Tajawal:wght@300;400;700&family=Noto+Naskh+Arabic&family=Noto+Kufi+Arabic&family=Scheherazade+New&family=Mada&family=Markazi+Text&family=Mirza&family=Rakkas&family=Changa&family=Katibeh&family=Lalezar&family=El+Messiri&family=Harmattan&family=Jomhuria&family=Almarai&family=Thabit&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- html2canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <!-- Splash -->
+  <div id="splash" class="splash" role="dialog" aria-modal="true">
+    <div class="splash-card">
+      <h1 class="splash-title">زخرفة الخطوط العربية</h1>
+      <p class="splash-desc">أهلاً بك — حوّل النص إلى تصميم جميل بخطوط وزخارف عربية مبتكرة ✨</p>
+      <div class="splash-actions">
+        <button id="splashStart" class="btn btn-primary">ابدأ الآن</button>
+        <button id="splashAdmin" class="btn btn-ghost">لوحة التحكم</button>
+      </div>
+      <small class="splash-note">تختفي تلقائيًا بعد 6 ثوانٍ</small>
+    </div>
+  </div>
+
+  <!-- Topbar -->
+  <header class="topbar" role="banner">
+    <button id="toggleSidebar" class="icon-btn" aria-label="قائمة"><img src="assets/yhbg.png" alt="القائمة"></button>
+    <div class="app-title">زخرفة الخطوط العربية</div>
+    <button id="openAdmin" class="icon-btn" aria-label="لوحة التحكم"><img src="assets/siting.png" alt="لوحة التحكم"></button>
+  </header>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar" aria-hidden="true">
+    <div class="sidebar-header">
+      <div class="sidebar-title">القائمة</div>
+      <button id="closeSidebar" class="close-x" aria-label="إغلاق">✕</button>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="أقسام التطبيق">
+      <a href="#arabicFontsSection">الخطوط العربية</a>
+      <a href="#nameStylesSection">زخرفة الأسماء</a>
+      <a href="#aboutSection">حول التطبيق</a>
+    </nav>
+
+    <div class="sidebar-footer small">متوافق مع الجوال • محفوظ محلياً</div>
+  </aside>
+
+  <!-- Admin Modal (لوحة التحكم) -->
+  <div id="adminModal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="adminTitle">
+    <div class="modal-card" role="document">
+      <button id="closeAdmin" class="close-x" aria-label="إغلاق">✕</button>
+
+      <!-- login (opaque) -->
+      <div id="adminLogin" class="admin-login solid-box">
+        <h2 id="adminTitle">لوحة التحكم</h2>
+        <p class="muted">أدخل كلمة المرور للوصول لإعدادات التطبيق</p>
+        <input id="adminPass" type="password" placeholder="كلمة المرور" aria-label="كلمة المرور" />
+        <div class="row">
+          <button id="adminLoginBtn" class="btn btn-primary">دخول</button>
+          <button id="adminCancelBtn" class="btn btn-ghost">إلغاء</button>
+        </div>
+      </div>
+
+      <!-- panel (after login) -->
+      <div id="adminPanel" class="admin-panel solid-box" style="display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <h3>إعدادات التطبيق</h3>
+          <div>
+            <button id="adminLogout" class="btn btn-ghost" title="خروج" style="display:none;margin-left:8px">خروج</button>
+          </div>
+        </div>
+
+        <!-- Accordion section template -->
+        <section class="admin-section">
+          <button class="admin-toggle">خط التطبيق</button>
+          <div class="admin-body">
+            <label for="appFontSelect">اختر خط التطبيق</label>
+            <select id="appFontSelect"></select>
+          </div>
+        </section>
+
+        <section class="admin-section">
+          <button class="admin-toggle">ألوان التدرج</button>
+          <div class="admin-body">
+            <label>اختر أو عدّل تدرج</label>
+            <div class="row">
+              <label>لون 1: <input id="gradColor1" type="color" value="#5b21b6"></label>
+              <label>لون 2: <input id="gradColor2" type="color" value="#2563eb"></label>
+              <label>لون 3: <input id="gradColor3" type="color" value="#10b981"></label>
+            </div>
+            <div class="row">
+              <label>نوع التدرج:
+                <select id="gradType">
+                  <option value="linear-135">Linear 135°</option>
+                  <option value="linear-90">Linear 90°</option>
+                  <option value="linear-45">Linear 45°</option>
+                  <option value="radial">Radial</option>
+                  <option value="conic">Conic</option>
+                </select>
+              </label>
+              <button id="applyGradientBtn" class="btn btn-primary">تطبيق</button>
+              <button id="saveGradientBtn" class="btn btn-success">حفظ</button>
+            </div>
+            <div id="gradPreview" class="preview small">معاينة التدرج</div>
+          </div>
+        </section>
+
+        <section class="admin-section">
+          <button class="admin-toggle">الخلفيات</button>
+          <div class="admin-body">
+            <label>خلفية رئيسية (لون HEX أو رابط)</label>
+            <input id="bgMain" placeholder="#ffffff أو https://..." />
+            <div class="row">
+              <button id="applyBgMain" class="btn btn-primary">تطبيق</button>
+              <button id="clearBgMain" class="btn btn-ghost">إلغاء</button>
+            </div>
+
+            <label style="margin-top:10px">خلفية قسم الخطوط</label>
+            <input id="bgFonts" placeholder="#fff أو رابط صورة" />
+            <div class="row">
+              <button id="applyBgFonts" class="btn btn-primary">تطبيق</button>
+            </div>
+
+            <label style="margin-top:10px">خلفية قسم الزخارف</label>
+            <input id="bgStyles" placeholder="#fff أو رابط صورة" />
+            <div class="row">
+              <button id="applyBgStyles" class="btn btn-primary">تطبيق</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="admin-section">
+          <button class="admin-toggle">الخطوط (إضافة/رفع)</button>
+          <div class="admin-body">
+            <label>إضافة خط عبر رابط (Google Fonts أو CSS/woff2)</label>
+            <input id="newFontName" placeholder="اسم الخط" />
+            <input id="newFontUrl" placeholder="رابط الخط (اختياري)" />
+            <div class="row">
+              <button id="addFontBtn" class="btn btn-primary">إضافة خط</button>
+              <label class="file-btn">رفع ملف خط
+                <input id="uploadFontFile" type="file" accept=".ttf,.otf,.woff,.woff2" />
+              </label>
+            </div>
+            <div id="adminFontsList" class="admin-list" aria-live="polite"></div>
+          </div>
+        </section>
+
+        <section class="admin-section">
+          <button class="admin-toggle">ستايلات التلبيس (صور)</button>
+          <div class="admin-body">
+            <label>أضف صورة للتلبيس (ستظهر كخيار لتلبيس النص)</label>
+            <div class="row">
+              <label class="file-btn">رفع صورة
+                <input id="uploadTilbisFile" type="file" accept="image/*" />
+              </label>
+              <input id="tilbisTitle" placeholder="عنوان التلبيس (مثلاً: ذهبي مرمر)" />
+              <button id="addTilbisBtn" class="btn btn-primary">إضافة</button>
+            </div>
+            <div id="tilbisList" class="admin-list" aria-live="polite"></div>
+          </div>
+        </section>
+
+        <section class="admin-section">
+          <button class="admin-toggle">ستايلات الزخرفة (إضافة/رفع)</button>
+          <div class="admin-body">
+            <label>إضافة ستايل زخرفة (استخدم {txt})</label>
+            <input id="newStyleName" placeholder="اسم الستايل" />
+            <input id="newStylePattern" placeholder="مثال: ★ {txt} ★" />
+            <div class="row">
+              <button id="addStyleBtn" class="btn btn-primary">إضافة ستايل</button>
+              <label class="file-btn">رفع ملف ستايلات
+                <input id="uploadStyleFile" type="file" accept=".txt,.json" />
+              </label>
+            </div>
+            <div id="adminStylesList" class="admin-list" aria-live="polite"></div>
+          </div>
+        </section>
+
+        <section class="admin-section">
+          <button class="admin-toggle">حول التطبيق (صورة + رابط)</button>
+          <div class="admin-body">
+            <label>رابط عند الضغط على صورة قسم "حول التطبيق"</label>
+            <input id="aboutLink" placeholder="https://..." />
+            <label style="margin-top:8px">أو ارفع صورة (ستظهر باسم "التواصل معنا")</label>
+            <div class="row">
+              <label class="file-btn">رفع صورة
+                <input id="aboutImageFile" type="file" accept="image/*" />
+              </label>
+              <button id="applyAboutBtn" class="btn btn-primary">تطبيق</button>
+            </div>
+          </div>
+        </section>
+
+        <div class="row" style="margin-top:12px">
+          <button id="saveSettings" class="btn btn-success">حفظ الإعدادات</button>
+          <button id="resetSettings" class="btn btn-ghost">استعادة الافتراضي</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main sections -->
+  <main class="main">
+
+    <!-- Arabic Fonts Section -->
+    <section id="arabicFontsSection" class="card section">
+      <h2>الخطوط العربية</h2>
+
+      <div class="controls">
+        <input id="inputText" placeholder="اكتب النص هنا..." />
+        <label>اختر خط:
+          <select id="fontSelector"></select>
+        </label>
+
+        <div class="inline">
+          <label>اللون: <input id="fontColor" type="color" value="#111111" /></label>
+          <label><input id="useGradient" type="checkbox" /> استخدم تدرج لوني</label>
+        </div>
+
+        <div class="row">
+          <label>طريقة التلوين:</label>
+          <select id="colorMode">
+            <option value="solid">ثابت</option>
+            <option value="gradient">تدرج</option>
+            <option value="tilbis">تلبيس (صورة)</option>
+          </select>
+        </div>
+
+        <!-- gradient & tilbis options -->
+        <div id="gradientControls" class="admin-list" style="margin-top:8px">
+          <div id="presetGradients"></div>
+        </div>
+
+        <div id="tilbisControls" class="admin-list" style="margin-top:8px;display:none">
+          <div id="tilbisThumbnails"></div>
+        </div>
+
+        <div class="row" style="margin-top:8px">
+          <button id="saveImage" class="btn btn-primary">حفظ كصورة</button>
+          <button id="clearText" class="btn btn-ghost">مسح النص</button>
+        </div>
+      </div>
+
+      <div id="previewFont" class="preview large">المعاينة ستظهر هنا</div>
+    </section>
+
+    <!-- Name Styles Section -->
+    <section id="nameStylesSection" class="card section">
+      <h2>زخرفة الأسماء</h2>
+
+      <div class="controls">
+        <input id="nameInput" placeholder="اكتب الاسم..." />
+        <label>اختر ستايل:
+          <select id="styleSelector"></select>
+        </label>
+
+        <div class="row">
+          <button id="copyResult" class="btn btn-primary">نسخ</button>
+          <button id="longPressHint" class="btn btn-ghost">اضغط مطوّلاً للنسخ</button>
+        </div>
+      </div>
+
+      <div id="stylePreview" class="preview medium">المعاينة ستظهر هنا</div>
+
+      <!-- نتائج الزخارف كبطاقات (كل وحدة قابلة للنسخ منفردة) -->
+      <div id="decorResults" class="decor-cards" aria-live="polite"></div>
+    </section>
+
+    <!-- About -->
+    <section id="aboutSection" class="card section">
+      <h2>حول التطبيق</h2>
+      <p>تطبيق خفيف لعرض خطوط عربية شهيرة، إضافة خطوط وستايلات زخرفة، وحفظ المعاينات كصور — مُصمّم للعمل على الجوال والويب.</p>
+      <div id="aboutMedia" style="margin-top:10px">
+        <!-- image (if set) will be injected here -->
+      </div>
+    </section>
+  </main>
+
+  <!-- small popups (reused) -->
+  <div id="popupBgMain" class="popup" aria-hidden="true">
+    <div class="popup-card">
+      <h4>تغيير الخلفية الرئيسية</h4>
+      <input id="popupBgMainInput" placeholder="#ffffff أو رابط صورة" />
+      <div class="row">
+        <button id="popupBgMainApply" class="btn btn-primary">تطبيق</button>
+        <button id="popupBgMainClose" class="btn btn-ghost">إلغاء</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
