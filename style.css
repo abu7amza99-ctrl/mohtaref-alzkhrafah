@@ -11,6 +11,8 @@ body {
   background: url('assets/bg.png') no-repeat center center fixed;
   background-size: cover;
   background-attachment: fixed;
+  margin: 0;
+  padding: 0;
   color: #fff;
   overflow-x: hidden;
   min-height: 100vh;
@@ -68,14 +70,15 @@ body {
 .header {
   background: url('assets/shbg.png') no-repeat center center;
   background-size: cover;
-  height: 55px;
+  height: 65px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 15px;
+  padding: 10px 20px;
   position: sticky;
   top: 0;
-  z-index: 999;
+  z-index: 1000;
+  border-bottom: 2px solid rgba(212, 175, 55, 0.4);
 }
 
 .app-title {
@@ -84,19 +87,34 @@ body {
   text-shadow: 0 0 10px #d4af37;
 }
 
+/* أزرار الشريط العلوي */
 .icon-btn {
-  background: url('assets/yhbg.png') no-repeat center center;
-  background-size: contain;
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   border: none;
-  outline: none;
+  border-radius: 50%;
+  background: url('assets/yhbg.png') no-repeat center center;
+  background-size: cover;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
 }
 
 .icon-btn:hover {
   transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+}
+
+/* زر القائمة الجانبية */
+#menu-btn {
+  background: url('assets/yhbg.png') no-repeat center center;
+  background-size: cover;
+}
+
+/* زر لوحة التحكم */
+#control-btn {
+  background: url('assets/siting.png') no-repeat center center;
+  background-size: cover;
 }
 
 /* زر القائمة الجانبية */
@@ -370,4 +388,5 @@ select, input[type="file"] {
   margin-left: 10px;
 
 }
+
 
