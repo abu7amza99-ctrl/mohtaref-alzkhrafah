@@ -1,4 +1,4 @@
-٧@import url('https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@600&family=Cairo:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@600&family=Cairo:wght@500&display=swap');
 
 * {
   margin: 0;
@@ -69,7 +69,7 @@ body {
 
 /* الشريط العلوي */
 .header {
-  background: url('assets/shbg.png') no-repeat center center;
+  background: url('assets/shbg2.png') no-repeat center center;
   background-size: cover;
   height: 70px;
   display: flex;
@@ -308,6 +308,7 @@ body {
   from {opacity: 0;}
   to {opacity: 1;}
 }
+
 
 
 
