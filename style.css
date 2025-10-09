@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@600&family=Cairo:wght@500&display=swap');
+ح@import url('https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@600&family=Cairo:wght@500&display=swap');
 
 * {
   margin: 0;
@@ -68,17 +68,21 @@ body {
 
 /* الشريط العلوي */
 .header {
-  background: url('assets/shbg.png') no-repeat center center;
+  background: linear-gradient(135deg, #d4af37 0%, #f8e287 100%);
+  background-image: url('assets/shbg.png');
+  background-repeat: no-repeat;
+  background-position: center;
   background-size: cover;
-  height: 65px;
+  height: 70px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
+  border-bottom: 2px solid rgba(212, 175, 55, 0.4);
   position: sticky;
   top: 0;
   z-index: 1000;
-  border-bottom: 2px solid rgba(212, 175, 55, 0.4);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 .app-title {
@@ -91,32 +95,35 @@ body {
 .icon-btn {
   width: 45px;
   height: 45px;
-  border: none;
+  border: 2px solid #d4af37;
   border-radius: 50%;
-  background: url('assets/yhbg.png') no-repeat center center;
-  background-size: cover;
+  background-color: rgba(27, 20, 13, 0.8);
+  color: #f5d77a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
   cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: all 0.3s ease;
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
 }
 
 .icon-btn:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+  background-color: rgba(212,175,55,0.3);
 }
 
-/* زر القائمة الجانبية */
+/* تخصيص زر القائمة */
 #menu-btn {
   background: url('assets/yhbg.png') no-repeat center center;
-  background-size: cover;
+  background-size: contain;
 }
 
-/* زر لوحة التحكم */
+/* تخصيص زر لوحة التحكم */
 #control-btn {
   background: url('assets/siting.png') no-repeat center center;
-  background-size: cover;
+  background-size: contain;
 }
-
 /* زر القائمة الجانبية */
 #menu-btn {
   background-image: url("assets/yhbg.png");
@@ -388,5 +395,6 @@ select, input[type="file"] {
   margin-left: 10px;
 
 }
+
 
 
